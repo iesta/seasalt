@@ -89,7 +89,6 @@ export async function detectCards(
       { role: 'system', content: systemPrompt },
       { role: 'user', content: userContent }
     ],
-    response_format: { type: 'json_object' },
     temperature: 0
   }
 
@@ -130,5 +129,18 @@ export async function fileToDataUrl(file: File): Promise<string> {
     reader.onload = () => resolve(reader.result as string)
     reader.onerror = () => reject(new Error('Lecture du fichier impossible'))
     reader.readAsDataURL(file)
+  })
+}
+
+export async function loadReferenceImage(): Promise<string> {
+  const url = `${import.meta.env.BASE_URL}cards/rulebook-reference.png`
+  const res = await fetch(url)
+  if (!res.ok) throw new Error(`Impossible de charger l'image de référence: ${res.status}`)
+  const blob = await res.blob()
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result as string)
+    reader.onerror = reject
+    reader.readAsDataURL(blob)
   })
 }

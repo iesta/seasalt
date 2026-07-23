@@ -1,9 +1,9 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { CameraInput } from './components/CameraInput'
 import { DetectedCards } from './components/DetectedCards'
 import { ScoreBreakdown } from './components/ScoreBreakdown'
 import { Settings, loadSettings } from './components/Settings'
-import { detectCards } from './lib/openrouter'
+import { detectCards, loadReferenceImage } from './lib/openrouter'
 import { score } from './lib/scoring'
 import type { Card } from './lib/types'
 
@@ -16,6 +16,13 @@ export default function App() {
   const [cards, setCards] = useState<Card[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const refImageRef = useRef('')
+
+  useEffect(() => {
+    loadReferenceImage()
+      .then(dataUrl => { refImageRef.current = dataUrl })
+      .catch(() => {}) // non-bloquant
+  }, [])
 
   const result = useMemo(() => score(cards), [cards])
 
@@ -36,8 +43,7 @@ export default function App() {
     setError('')
     setImageDataUrl(dataUrl)
     try {
-      const refUrl = `${import.meta.env.BASE_URL}cards/rulebook-reference.png`
-      const detected = await detectCards(settings.apiKey, settings.model, dataUrl, refUrl)
+      const detected = await detectCards(settings.apiKey, settings.model, dataUrl, refImageRef.current || undefined)
       setCards(detected)
       setView('result')
     } catch (e) {
