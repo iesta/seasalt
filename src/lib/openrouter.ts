@@ -63,8 +63,7 @@ function normalizeCard(raw: DetectedCardRaw, index: number): Card {
 export async function detectCards(
   apiKey: string,
   model: string,
-  imageDataUrl: string,
-  referenceImageUrl?: string
+  imageDataUrl: string
 ): Promise<Card[]> {
   const systemPrompt = buildSystemPrompt()
 
@@ -74,14 +73,6 @@ export async function detectCards(
     { type: 'text', text: 'Identifie toutes les cartes visibles sur la photo ci-dessous.' },
     { type: 'image_url', image_url: { url: imageDataUrl } }
   ]
-
-  if (referenceImageUrl) {
-    userContent.push({
-      type: 'text',
-      text: 'Pour référence, voici une planche du livret de règles officiel montrant les 14 types de cartes:'
-    })
-    userContent.push({ type: 'image_url', image_url: { url: referenceImageUrl } })
-  }
 
   const body = {
     model,
@@ -129,18 +120,5 @@ export async function fileToDataUrl(file: File): Promise<string> {
     reader.onload = () => resolve(reader.result as string)
     reader.onerror = () => reject(new Error('Lecture du fichier impossible'))
     reader.readAsDataURL(file)
-  })
-}
-
-export async function loadReferenceImage(): Promise<string> {
-  const url = `${import.meta.env.BASE_URL}cards/rulebook-reference.png`
-  const res = await fetch(url)
-  if (!res.ok) throw new Error(`Impossible de charger l'image de référence: ${res.status}`)
-  const blob = await res.blob()
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onload = () => resolve(reader.result as string)
-    reader.onerror = reject
-    reader.readAsDataURL(blob)
   })
 }

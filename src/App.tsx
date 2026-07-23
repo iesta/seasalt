@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { CameraInput } from './components/CameraInput'
 import { DetectedCards } from './components/DetectedCards'
 import { ScoreBreakdown } from './components/ScoreBreakdown'
 import { Settings, loadSettings } from './components/Settings'
-import { detectCards, loadReferenceImage } from './lib/openrouter'
+import { detectCards } from './lib/openrouter'
 import { score } from './lib/scoring'
 import type { Card } from './lib/types'
 
@@ -16,13 +16,6 @@ export default function App() {
   const [cards, setCards] = useState<Card[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const refImageRef = useRef('')
-
-  useEffect(() => {
-    loadReferenceImage()
-      .then(dataUrl => { refImageRef.current = dataUrl })
-      .catch(() => {}) // non-bloquant
-  }, [])
 
   const result = useMemo(() => score(cards), [cards])
 
@@ -43,7 +36,7 @@ export default function App() {
     setError('')
     setImageDataUrl(dataUrl)
     try {
-      const detected = await detectCards(settings.apiKey, settings.model, dataUrl, refImageRef.current || undefined)
+      const detected = await detectCards(settings.apiKey, settings.model, dataUrl)
       setCards(detected)
       setView('result')
     } catch (e) {
@@ -77,8 +70,18 @@ export default function App() {
 
       <main className="flex-1 max-w-lg w-full mx-auto p-4 space-y-4">
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg p-3">
-            {error}
+          <div className="bg-red-50 border border-red-200 rounded-lg p-3 space-y-2">
+            <div className="flex items-start justify-between gap-2">
+              <span className="text-red-700 text-sm font-medium">Erreur</span>
+              <button onClick={() => setError('')} className="text-red-400 hover:text-red-600 text-lg leading-none">×</button>
+            </div>
+            <p className="text-red-600 text-sm break-words whitespace-pre-wrap">{error}</p>
+            <button
+              onClick={() => { setError(''); setView('home') }}
+              className="text-xs text-red-700 underline"
+            >
+              Réessayer
+            </button>
           </div>
         )}
 
@@ -94,8 +97,14 @@ export default function App() {
             </div>
             <CameraInput onImage={handleImage} disabled={loading} />
             {loading && (
-              <div className="text-center text-sea-700 animate-pulse">
-                Analyse en cours…
+              <div className="flex flex-col items-center gap-3 py-6">
+                <div className="w-12 h-12 border-4 border-sea-300 border-t-sea-700 rounded-full animate-spin" />
+                <p className="text-sea-700 font-medium animate-pulse">
+                  Envoi de la photo au modèle vision…
+                </p>
+                <p className="text-xs text-gray-500">
+                  L'IA analyse les cartes. Cela prend quelques secondes.
+                </p>
               </div>
             )}
           </div>
