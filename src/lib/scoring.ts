@@ -1,4 +1,5 @@
-import type { Card, CardColor, CardType, ScoreResult, ScoreLine } from './types'
+import type { Card, CardColor, CardType, ScoreResult, ScoreLine, ColorBucket } from './types'
+import { CARD_COLOR_LABELS } from './types'
 
 const SHELL_POINTS: Record<number, number> = { 1: 0, 2: 2, 3: 4, 4: 6, 5: 8, 6: 10 }
 const OCTOPUS_POINTS: Record<number, number> = { 1: 0, 2: 3, 3: 6, 4: 9, 5: 12 }
@@ -28,17 +29,21 @@ function lookupTier(count: number, table: Record<number, number>): number {
 
 function scoreDuos(byType: Map<CardType, number>): ScoreLine[] {
   const lines: ScoreLine[] = []
-  const crabPairs = Math.floor((byType.get('crab') ?? 0) / 2)
-  const boatPairs = Math.floor((byType.get('boat') ?? 0) / 2)
-  const fishPairs = Math.floor((byType.get('fish') ?? 0) / 2)
-  const swimmerSharkPairs = Math.floor(
-    Math.min(byType.get('swimmer') ?? 0, byType.get('shark') ?? 0)
-  )
+  const crabCount = byType.get('crab') ?? 0
+  const boatCount = byType.get('boat') ?? 0
+  const fishCount = byType.get('fish') ?? 0
+  const swimmerCount = byType.get('swimmer') ?? 0
+  const sharkCount = byType.get('shark') ?? 0
 
-  if (crabPairs > 0) lines.push({ label: 'Paires de crabes', points: crabPairs, detail: `${crabPairs} × 1 pt` })
-  if (boatPairs > 0) lines.push({ label: 'Paires de bateaux', points: boatPairs, detail: `${boatPairs} × 1 pt` })
-  if (fishPairs > 0) lines.push({ label: 'Paires de poissons', points: fishPairs, detail: `${fishPairs} × 1 pt` })
-  if (swimmerSharkPairs > 0) lines.push({ label: 'Paires nageur + requin', points: swimmerSharkPairs, detail: `${swimmerSharkPairs} × 1 pt` })
+  const crabPairs = Math.floor(crabCount / 2)
+  const boatPairs = Math.floor(boatCount / 2)
+  const fishPairs = Math.floor(fishCount / 2)
+  const swimmerSharkPairs = Math.min(swimmerCount, sharkCount)
+
+  if (crabPairs > 0) lines.push({ label: 'Paires de crabes', points: crabPairs, detail: `${crabCount} crabe(s) → ${crabPairs} paire(s) × 1 pt` })
+  if (boatPairs > 0) lines.push({ label: 'Paires de bateaux', points: boatPairs, detail: `${boatCount} bateau(x) → ${boatPairs} paire(s) × 1 pt` })
+  if (fishPairs > 0) lines.push({ label: 'Paires de poissons', points: fishPairs, detail: `${fishCount} poisson(s) → ${fishPairs} paire(s) × 1 pt` })
+  if (swimmerSharkPairs > 0) lines.push({ label: 'Paires nageur + requin', points: swimmerSharkPairs, detail: `${swimmerCount} nageur(s) + ${sharkCount} requin(s) → ${swimmerSharkPairs} paire(s) × 1 pt` })
 
   return lines
 }
@@ -52,19 +57,19 @@ function scoreCollectors(byType: Map<CardType, number>): ScoreLine[] {
 
   if (shells > 0) {
     const pts = lookupTier(shells, SHELL_POINTS)
-    lines.push({ label: 'Coquillages', points: pts, detail: `${shells} carte(s) → ${pts} pts` })
+    lines.push({ label: 'Coquillages', points: pts, detail: `${shells} coquillage(s) → barème: ${pts} pts (0/2/4/6/8/10)` })
   }
   if (octopuses > 0) {
     const pts = lookupTier(octopuses, OCTOPUS_POINTS)
-    lines.push({ label: 'Pieuvres', points: pts, detail: `${octopuses} carte(s) → ${pts} pts` })
+    lines.push({ label: 'Pieuvres', points: pts, detail: `${octopuses} pieuvre(s) → barème: ${pts} pts (0/3/6/9/12)` })
   }
   if (penguins > 0) {
     const pts = lookupTier(penguins, PENGUIN_POINTS)
-    lines.push({ label: 'Pingouins', points: pts, detail: `${penguins} carte(s) → ${pts} pts` })
+    lines.push({ label: 'Pingouins', points: pts, detail: `${penguins} pingouin(s) → barème: ${pts} pts (1/3/5)` })
   }
   if (sailors > 0) {
     const pts = lookupTier(sailors, SAILOR_POINTS)
-    lines.push({ label: 'Marins', points: pts, detail: `${sailors} carte(s) → ${pts} pts` })
+    lines.push({ label: 'Marins', points: pts, detail: `${sailors} marin(s) → barème: ${pts} pts (0/5)` })
   }
 
   return lines
@@ -79,19 +84,19 @@ function scoreMultipliers(byType: Map<CardType, number>): ScoreLine[] {
 
   if (byType.get('lighthouse')) {
     const pts = boats
-    lines.push({ label: 'Phare', points: pts, detail: `1 pt × ${boats} bateau(x)` })
+    lines.push({ label: 'Phare', points: pts, detail: `Phare (1pt/bateau) × ${boats} bateau(x)` })
   }
   if (byType.get('shoal')) {
     const pts = fish
-    lines.push({ label: 'Banc de poissons', points: pts, detail: `1 pt × ${fish} poisson(s)` })
+    lines.push({ label: 'Banc de poissons', points: pts, detail: `Banc (1pt/poisson) × ${fish} poisson(s)` })
   }
   if (byType.get('colony')) {
     const pts = 2 * penguins
-    lines.push({ label: 'Colonie de pingouins', points: pts, detail: `2 pts × ${penguins} pingouin(s)` })
+    lines.push({ label: 'Colonie de pingouins', points: pts, detail: `Colonie (2pts/pingouin) × ${penguins} pingouin(s)` })
   }
   if (byType.get('captain')) {
     const pts = 3 * sailors
-    lines.push({ label: 'Capitaine', points: pts, detail: `3 pts × ${sailors} marin(s)` })
+    lines.push({ label: 'Capitaine', points: pts, detail: `Capitaine (3pts/marin) × ${sailors} marin(s)` })
   }
 
   return lines
@@ -148,4 +153,16 @@ export function score(cards: Card[]): ScoreResult {
 
   const total = lines.reduce((sum, l) => sum + l.points, 0)
   return { total, win: false, lines }
+}
+
+export function computeColorDistribution(cards: Card[]): ColorBucket[] {
+  const counts = countByColor(cards)
+  return [...counts.entries()]
+    .filter(([, n]) => n > 0)
+    .sort((a, b) => b[1] - a[1])
+    .map(([color, count]) => ({
+      color,
+      count,
+      label: CARD_COLOR_LABELS[color]
+    }))
 }

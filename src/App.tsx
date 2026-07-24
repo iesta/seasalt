@@ -1,10 +1,12 @@
 import { useMemo, useState } from 'react'
 import { CameraInput } from './components/CameraInput'
+import { ColorTable } from './components/ColorTable'
 import { DetectedCards } from './components/DetectedCards'
+import { Lightbox } from './components/Lightbox'
 import { ScoreBreakdown } from './components/ScoreBreakdown'
 import { Settings, loadSettings } from './components/Settings'
 import { detectCards } from './lib/openrouter'
-import { score } from './lib/scoring'
+import { computeColorDistribution, score } from './lib/scoring'
 import type { Card } from './lib/types'
 import refImage from './assets/rulebook-ref.png?inline'
 
@@ -13,12 +15,14 @@ type View = 'home' | 'result'
 export default function App() {
   const [view, setView] = useState<View>('home')
   const [showSettings, setShowSettings] = useState(false)
+  const [showLightbox, setShowLightbox] = useState(false)
   const [imageDataUrl, setImageDataUrl] = useState('')
   const [cards, setCards] = useState<Card[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
   const result = useMemo(() => score(cards), [cards])
+  const colors = useMemo(() => computeColorDistribution(cards), [cards])
 
   const settings = loadSettings()
 
@@ -116,13 +120,14 @@ export default function App() {
             {imageDataUrl && (
               <img
                 src={imageDataUrl}
-                alt="Main photographiée"
-                className="w-full rounded-xl border border-gray-200 max-h-48 object-cover"
+                alt="Main photographiée — clic pour agrandir"
+                className="w-full rounded-xl border border-gray-200 max-h-48 object-cover cursor-pointer hover:opacity-90 transition-opacity"
+                onClick={() => setShowLightbox(true)}
               />
             )}
 
-            <ScoreBreakdown result={result} />
-
+            <ScoreBreakdown result={result} cardCount={cards.length} />
+            <ColorTable colors={colors} />
             <DetectedCards cards={cards} onChange={setCards} />
 
             <div className="flex gap-2 pt-2">
@@ -141,6 +146,13 @@ export default function App() {
         <Settings
           onClose={() => setShowSettings(false)}
           onSaved={() => { setView('home') }}
+        />
+      )}
+
+      {showLightbox && imageDataUrl && (
+        <Lightbox
+          src={imageDataUrl}
+          onClose={() => setShowLightbox(false)}
         />
       )}
     </div>

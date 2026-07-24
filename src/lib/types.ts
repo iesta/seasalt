@@ -44,6 +44,12 @@ export interface ScoreResult {
   lines: ScoreLine[]
 }
 
+export interface ColorBucket {
+  color: CardColor
+  count: number
+  label: string
+}
+
 export const CARD_TYPES: CardType[] = [
   'crab', 'boat', 'fish', 'swimmer', 'shark',
   'shell', 'octopus', 'penguin', 'sailor',
