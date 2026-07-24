@@ -9,7 +9,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['cards/*.png', 'icons/*.png'],
+      includeAssets: ['icons/*.png'],
       manifest: {
         name: 'Seasalt — Compteur Sea Salt & Paper',
         short_name: 'Seasalt',

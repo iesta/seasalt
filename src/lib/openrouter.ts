@@ -63,7 +63,8 @@ function normalizeCard(raw: DetectedCardRaw, index: number): Card {
 export async function detectCards(
   apiKey: string,
   model: string,
-  imageDataUrl: string
+  imageDataUrl: string,
+  referenceImageUrl?: string
 ): Promise<Card[]> {
   const systemPrompt = buildSystemPrompt()
 
@@ -73,6 +74,14 @@ export async function detectCards(
     { type: 'text', text: 'Identifie toutes les cartes visibles sur la photo ci-dessous.' },
     { type: 'image_url', image_url: { url: imageDataUrl } }
   ]
+
+  if (referenceImageUrl) {
+    userContent.push({
+      type: 'text',
+      text: 'Pour référence, voici une planche du livret de règles officiel montrant les 14 types de cartes avec leurs pictogrammes, nombres et symboles ColorADD:'
+    })
+    userContent.push({ type: 'image_url', image_url: { url: referenceImageUrl } })
+  }
 
   const body = {
     model,

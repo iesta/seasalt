@@ -1,70 +1,108 @@
-import type { CardColor, CardType } from './types'
-import { CARD_COLORS, CARD_TYPE_LABELS, CARD_TYPE_META } from './types'
+import type { CardType } from './types'
+import { CARD_TYPE_LABELS } from './types'
 
-const COLOR_DESCRIPTIONS: Record<CardColor, string> = {
-  yellow: 'jaune',
-  green: 'vert',
-  pink: 'rose',
-  purple: 'violet',
-  lightblue: 'bleu clair',
-  darkblue: 'bleu foncé',
-  black: 'noir',
-  gray: 'gris',
-  white: 'blanc'
+const TYPE_BY_COUNT: Record<string, CardType[]> = {
+  '9': ['crab'],
+  '8': ['boat'],
+  '7': ['fish'],
+  '6': ['shell'],
+  '5': ['swimmer', 'shark', 'octopus'],
+  '4': ['mermaid'],
+  '3': ['penguin'],
+  '2': ['sailor'],
+  '1': ['lighthouse', 'shoal', 'colony', 'captain']
 }
 
-const TYPE_DESCRIPTIONS: Record<CardType, string> = {
-  crab: 'Crabe — origami de crabe. Symbole ColorADD sur la carte.',
-  boat: 'Bateau — origami de petit bateau/papier.',
-  fish: 'Poisson — origami de poisson.',
-  swimmer: 'Nageur — origami de figure humaine en train de nager.',
-  shark: 'Requin — origami de requin.',
-  shell: 'Coquillage — origami de coquille (type palourde).',
-  octopus: 'Pieuvre — origami de poulpe/octopus.',
-  penguin: 'Pingouin — origami de pingouin.',
-  sailor: 'Marin — origami de marin avec casquette.',
-  lighthouse: 'Phare — origami de phare.',
-  shoal: 'Banc de poissons — origami représentant plusieurs petits poissons ensemble.',
-  colony: 'Colonie de pingouins — origami de plusieurs pingouins ensemble.',
-  captain: 'Capitaine — origami de capitaine avec barbe/casquette.',
-  mermaid: 'Sirène — origami de sirène. Couleur blanche par défaut.',
-  unknown: 'Carte non identifiée.'
+const TYPE_PICTOGRAMS: Record<CardType, string> = {
+  crab: 'crabe stylisé, vu de dessus, avec pinces de chaque côté du corps',
+  boat: 'bateau/coque vu de profil, mât et voile',
+  fish: 'UN SEUL poisson, profil, nageoire dorsale',
+  swimmer: 'figure humaine en mouvement de nage, bras devant',
+  shark: 'requin, nageoire dorsale triangulaire pointue, bouche',
+  shell: 'coquille (palourde), forme arrondie, stries concentriques',
+  octopus: 'pieuvre, tête ronde, tentacules ondulés',
+  penguin: 'UN SEUL pingouin, debout, ventre blanc',
+  sailor: 'tête de marin, casquette plate sur la tête',
+  lighthouse: 'tour de phare, faisceau lumineux latéral',
+  shoal: 'PLUSIEURS petits poissons groupés formant un banc',
+  colony: 'PLUSIEURS pingouins groupés, debout côte à côte',
+  captain: 'tête de capitaine, barbe fournie, casquette avec insigne',
+  mermaid: 'sirène, buste humain, queue de poisson',
+  unknown: 'non identifiable'
 }
+
+const COLORADD_SYMBOLS = `▲ triangle vers le haut = BLEU
+▼ triangle vers le bas = ROUGE
+/ ligne diagonale = JAUNE
+■ carré plein = NOIR
+□ carré vide = BLANC
+
+Couleurs dérivées (superposition des symboles de base):
+  vert = ▲/ (bleu + jaune)
+  violet = ▲▼ (bleu + rouge)
+  rose = □▼ (blanc + rouge = rouge clair)
+  bleu clair = □▲ (blanc + bleu)
+  bleu foncé = ■▲ (noir + bleu)
+  gris = ■□ (noir + blanc)
+  jaune = / (diagonale seule)
+  noir = ■ (carré plein seul)
+  blanc = □ (carré vide seul)`
 
 export function buildSystemPrompt(): string {
-  const typeLines = Object.entries(CARD_TYPE_META)
-    .filter(([t]) => t !== 'unknown')
-    .map(([t, meta]) => {
-      const type = t as CardType
-      return `- ${type} (${CARD_TYPE_LABELS[type]}, catégorie: ${meta.category}, ${meta.count} dans le deck): ${TYPE_DESCRIPTIONS[type]}`
+  const countLines = Object.entries(TYPE_BY_COUNT)
+    .map(([n, types]) => {
+      const names = types.map(t => `${t} (${CARD_TYPE_LABELS[t]})`).join(' OU ')
+      return `x${n} → ${names}`
     })
     .join('\n')
 
-  const colorLines = CARD_COLORS.map(c => `- ${c} (${COLOR_DESCRIPTIONS[c]})`).join('\n')
+  const pictoLines = Object.entries(TYPE_PICTOGRAMS)
+    .filter(([t]) => t !== 'unknown')
+    .map(([t, desc]) => `- ${t}: ${desc}`)
+    .join('\n')
 
   return `Tu es un assistant expert dans le jeu de cartes Sea Salt & Paper (Bombyx, 2022).
-Ton rôle: identifier les cartes visibles sur une photo et les retourner dans un format JSON strict.
+Ton rôle: identifier TOUTES les cartes visibles sur une photo et les retourner en JSON.
 
-TYPES DE CARTES POSSIBLES (14 types, base game uniquement, pas d'expansion):
-${typeLines}
+STRUCTURE D'UNE CARTE:
+┌──────────────────────────────┐
+│ [PICTOGRAMME]                │
+│                              │
+│      PHOTO ORIGAMI           │
+│                              │
+│                    [xN]  ◆▲ │
+└──────────────────────────────┘
+- HAUT GAUCHE: pictogramme identifiant le type de carte
+- BAS DROITE: nombre d'exemplaires dans le deck (x9, x8...) + symbole ColorADD
 
-COULEURS POSSIBLES (9 couleurs, la sirène est toujours blanche):
-${colorLines}
+IDENTIFICATION PAR NOMBRE (bas droite):
+${countLines}
 
-Chaque carte porte un symbole ColorADD en bas à droite qui aide à identifier la couleur de manière non-ambiguë (utile si l'éclairage est mauvais). Si tu hésites entre deux couleurs, utilise le symbole ColorADD.
+IDENTIFICATION PAR PICTOGRAMME (haut gauche):
+${pictoLines}
 
-RÈGLES D'IDENTIFICATION:
-- Compte TOUTES les cartes visibles sur la photo (cartes en main + cartes posées devant le joueur).
-- Une carte = une entrée dans la liste.
-- Si tu ne reconnais pas une carte, utilise type "unknown".
-- Si tu ne peux pas déterminer la couleur, choisis la plus probable.
-- Ne déduis rien, ne calcule rien, liste uniquement les cartes observées.
+SYSTÈME ColorADD (bas droite — identifie la couleur):
+${COLORADD_SYMBOLS}
+
+INSTRUCTIONS:
+1. Parcours la photo de gauche à droite, ligne par ligne, de haut en bas.
+2. Pour CHAQUE carte visible, lis les 3 signaux dans cet ordre:
+   a. Le nombre en bas à droite (x9, x8, x7...) → restreint les types possibles
+   b. Le pictogramme en haut à gauche → confirme le type exact
+   c. Le symbole ColorADD en bas à droite → donne la couleur
+3. Pour les nombres ambigus: x5 = swimmer, shark ou octopus; x1 = lighthouse, shoal, colony ou captain. Utilise le pictogramme pour trancher.
+4. Pour les Duo (crab, boat, fish, swimmer, shark): le pictogramme montre l'icône en trait plein + la carte paire en pointillés.
+5. Les cartes peuvent être chevauchées ou partiellement visibles. Identifie-les si tu vois assez d'éléments (picto + nombre).
+6. Les sirènes (mermaid) sont TOUJOURS de couleur blanche.
+7. Avant de répondre, RECOMPTE les cartes identifiées et vérifie que le compte total correspond à ce que tu vois sur la photo.
 
 FORMAT DE RÉPONSE (JSON strict, sans markdown, sans commentaire):
 {
+  "count": 7,
   "cards": [
     { "type": "crab", "color": "yellow" },
     { "type": "boat", "color": "darkblue" }
   ]
-}`
+}
+Le champ "count" doit être STRICTEMENT égal au nombre d'entrées dans "cards".`
 }

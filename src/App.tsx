@@ -6,6 +6,7 @@ import { Settings, loadSettings } from './components/Settings'
 import { detectCards } from './lib/openrouter'
 import { score } from './lib/scoring'
 import type { Card } from './lib/types'
+import refImage from './assets/rulebook-ref.png?inline'
 
 type View = 'home' | 'result'
 
@@ -36,7 +37,7 @@ export default function App() {
     setError('')
     setImageDataUrl(dataUrl)
     try {
-      const detected = await detectCards(settings.apiKey, settings.model, dataUrl)
+      const detected = await detectCards(settings.apiKey, settings.model, dataUrl, refImage)
       setCards(detected)
       setView('result')
     } catch (e) {
