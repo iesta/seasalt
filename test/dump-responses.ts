@@ -8,7 +8,7 @@ const TEST_DIR = __dirname
 const API_URL = 'https://openrouter.ai/api/v1/chat/completions'
 
 const API_KEY = process.env.OPENROUTER_API_KEY ?? ''
-const MODEL = process.env.OPENROUTER_MODEL ?? 'openai/gpt-4o-mini'
+const MODEL = process.env.OPENROUTER_MODEL ?? 'google/gemini-3.6-flash'
 const DELAY_MS = 2000
 
 const IMAGE_EXTS = new Set(['.png', '.jpg', '.jpeg', '.webp', '.heic', '.heif'])
@@ -53,7 +53,7 @@ async function main() {
 
     const body = {
       model: MODEL,
-      max_tokens: 2048,
+      max_tokens: 8192,
       messages: [
         { role: 'system' as const, content: buildSystemPrompt() },
         {
@@ -81,9 +81,16 @@ async function main() {
 
     const data = await res.json()
     const raw = data.choices?.[0]?.message?.content ?? ''
-    const parsed = extractJson(raw)
-    writeFileSync(outPath, JSON.stringify(parsed, null, 2))
-    console.log(`  → ${outPath} (${parsed.cards?.length ?? '?'} cards)`)
+    const finish = data.choices?.[0]?.finish_reason ?? ''
+    try {
+      const parsed = extractJson(raw)
+      writeFileSync(outPath, JSON.stringify(parsed, null, 2))
+      console.log(`  → ${outPath} (${parsed.cards?.length ?? '?'} cards, ${finish})`)
+    } catch (e) {
+      console.log(`  ❌ JSON parse error (${finish}): ${e.message}`)
+      console.log(`  RAW: ${raw.slice(0, 600)}`)
+      writeFileSync(outPath, raw)
+    }
 
     await new Promise(r => setTimeout(r, DELAY_MS))
   }

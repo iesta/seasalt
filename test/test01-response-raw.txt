@@ -1,0 +1,8 @@
+```json
+{
+  "count": 11,
+  "cards": [
+    { "type": "mermaid", "color": "white" },
+    { "type": "lighthouse", "color": "yellow" },
+    { "type": "shark", "color": "black" },
+    { "type": "fish", "color": "

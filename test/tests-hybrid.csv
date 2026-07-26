@@ -1,3 +1,4 @@
 image,card_count,score,dominant_color_name,dominant_color_count
-test01.jpg,8,6,Blanc,2
-test02.jpg,10,3,—,2
+test01.jpg,11,11,Jaune,2
+test02.jpg,14,8,Noir,4
+test03.jpg,14,14,Vert,3

@@ -11,7 +11,7 @@ const CSV_PATH = join(TEST_DIR, 'tests-hybrid.csv')
 const API_URL = 'https://openrouter.ai/api/v1/chat/completions'
 
 const API_KEY = process.env.OPENROUTER_API_KEY ?? ''
-const MODEL = process.env.OPENROUTER_MODEL ?? 'openai/gpt-4o-mini'
+const MODEL = process.env.OPENROUTER_MODEL ?? 'google/gemini-3.6-flash'
 const DELAY_MS = 2000
 
 const IMAGE_EXTS = new Set(['.png', '.jpg', '.jpeg', '.webp', '.heic', '.heif'])
@@ -61,7 +61,7 @@ async function processImage(imagePath: string): Promise<Card[]> {
         ]
       }
     ],
-    max_tokens: 2048,
+    max_tokens: 8192,
     temperature: 0
   }
 
