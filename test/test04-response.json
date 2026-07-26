@@ -7,7 +7,7 @@
     },
     {
       "type": "shoal",
-      "color": "black"
+      "color": "white"
     },
     {
       "type": "colony",
@@ -18,20 +18,28 @@
       "color": "lightblue"
     },
     {
+      "type": "shark",
+      "color": "lightblue"
+    },
+    {
       "type": "swimmer",
-      "color": "black"
+      "color": "gray"
     },
     {
       "type": "penguin",
-      "color": "pink"
+      "color": "white"
     },
     {
       "type": "penguin",
-      "color": "violet"
+      "color": "white"
     },
     {
-      "type": "sailor",
-      "color": "pink"
+      "type": "captain",
+      "color": "red"
+    },
+    {
+      "type": "crab",
+      "color": "green"
     },
     {
       "type": "crab",
@@ -47,15 +55,7 @@
     },
     {
       "type": "shell",
-      "color": "black"
-    },
-    {
-      "type": "boat",
-      "color": "blue"
-    },
-    {
-      "type": "shark",
-      "color": "blue"
+      "color": "yellow"
     }
   ]
 }

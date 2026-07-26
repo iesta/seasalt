@@ -8,7 +8,7 @@ const TEST_DIR = __dirname
 const API_URL = 'https://openrouter.ai/api/v1/chat/completions'
 
 const API_KEY = process.env.OPENROUTER_API_KEY ?? ''
-const MODEL = 'google/gemini-2.5-flash'
+const MODEL = process.env.OPENROUTER_MODEL ?? 'openai/gpt-4o-mini'
 const DELAY_MS = 2000
 
 const IMAGE_EXTS = new Set(['.png', '.jpg', '.jpeg', '.webp', '.heic', '.heif'])
@@ -36,7 +36,11 @@ async function main() {
     .filter(f => IMAGE_EXTS.has(extname(f).toLowerCase()))
     .sort()
 
-  for (const file of files) {
+  const limitIdx = process.argv.indexOf('--limit')
+  const limit = limitIdx >= 0 ? parseInt(process.argv[limitIdx + 1], 10) : files.length
+  const slice = files.slice(0, limit)
+
+  for (const file of slice) {
     const imagePath = join(TEST_DIR, file)
     const outPath = join(TEST_DIR, file.replace(/\.[^.]+$/, '') + '-response.json')
 
@@ -49,6 +53,7 @@ async function main() {
 
     const body = {
       model: MODEL,
+      max_tokens: 2048,
       messages: [
         { role: 'system' as const, content: buildSystemPrompt() },
         {

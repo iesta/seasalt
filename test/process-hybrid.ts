@@ -11,7 +11,7 @@ const CSV_PATH = join(TEST_DIR, 'tests-hybrid.csv')
 const API_URL = 'https://openrouter.ai/api/v1/chat/completions'
 
 const API_KEY = process.env.OPENROUTER_API_KEY ?? ''
-const MODEL = process.env.OPENROUTER_MODEL ?? 'google/gemini-2.5-pro'
+const MODEL = process.env.OPENROUTER_MODEL ?? 'openai/gpt-4o-mini'
 const DELAY_MS = 2000
 
 const IMAGE_EXTS = new Set(['.png', '.jpg', '.jpeg', '.webp', '.heic', '.heif'])
@@ -61,6 +61,7 @@ async function processImage(imagePath: string): Promise<Card[]> {
         ]
       }
     ],
+    max_tokens: 2048,
     temperature: 0
   }
 
@@ -112,6 +113,10 @@ async function main() {
     .filter(f => IMAGE_EXTS.has(extname(f).toLowerCase()))
     .sort()
 
+  const limitIdx = process.argv.indexOf('--limit')
+  const limit = limitIdx >= 0 ? parseInt(process.argv[limitIdx + 1], 10) : files.length
+  const slice = files.slice(0, limit)
+
   if (files.length === 0) {
     console.error('❌ Aucune image dans test/.')
     process.exit(1)
@@ -121,7 +126,7 @@ async function main() {
   console.log(`   LLM   : identifie les cartes (pas le score)`)
   console.log(`   Score : scoring.ts (déterministe, 31 tests)`)
   console.log(`   Modèle: ${MODEL}`)
-  console.log(`   Images: ${files.length}\n`)
+  console.log(`   Images: ${files.length} (limit: ${limit})\n`)
   console.log('='.repeat(60) + '\n')
 
   const csvHeader = 'image,card_count,score,dominant_color_name,dominant_color_count'
@@ -130,8 +135,8 @@ async function main() {
   let totalApi = 0
   const tStart = Date.now()
 
-  for (let i = 0; i < files.length; i++) {
-    const file = files[i]
+  for (let i = 0; i < slice.length; i++) {
+    const file = slice[i]
     const imagePath = join(TEST_DIR, file)
     console.log(`[${i + 1}/${files.length}] 📸 ${file}`)
 
@@ -167,7 +172,7 @@ async function main() {
       writeFileSync(CSV_PATH, `"${file}",ERROR,ERROR,ERROR,ERROR\n`, { flag: 'a' })
     }
 
-    if (i < files.length - 1) {
+    if (i < slice.length - 1) {
       await new Promise(r => setTimeout(r, DELAY_MS))
     }
   }

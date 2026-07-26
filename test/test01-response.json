@@ -1,21 +1,25 @@
 {
-  "count": 12,
+  "count": 8,
   "cards": [
     {
-      "type": "captain",
+      "type": "penguin",
+      "color": "blue"
+    },
+    {
+      "type": "sailor",
       "color": "yellow"
-    },
-    {
-      "type": "boat",
-      "color": "darkblue"
-    },
-    {
-      "type": "mermaid",
-      "color": "white"
     },
     {
       "type": "crab",
       "color": "yellow"
+    },
+    {
+      "type": "octopus",
+      "color": "gray"
+    },
+    {
+      "type": "fish",
+      "color": "darkblue"
     },
     {
       "type": "shell",
@@ -23,31 +27,11 @@
     },
     {
       "type": "shell",
+      "color": "white"
+    },
+    {
+      "type": "shell",
       "color": "blue"
-    },
-    {
-      "type": "fish",
-      "color": "darkblue"
-    },
-    {
-      "type": "octopus",
-      "color": "lightblue"
-    },
-    {
-      "type": "shell",
-      "color": "lightblue"
-    },
-    {
-      "type": "octopus",
-      "color": "gray"
-    },
-    {
-      "type": "shell",
-      "color": "gray"
-    },
-    {
-      "type": "fish",
-      "color": "darkblue"
     }
   ]
 }

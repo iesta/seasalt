@@ -85,16 +85,17 @@ SYSTÈME ColorADD (bas droite — identifie la couleur):
 ${COLORADD_SYMBOLS}
 
 INSTRUCTIONS:
-1. Parcours la photo de gauche à droite, ligne par ligne, de haut en bas.
-2. Pour CHAQUE carte visible, lis les 3 signaux dans cet ordre:
+0. LISTE DES TYPES DE CARTES POSSIBLES: crab, boat, fish, swimmer, shark, shell, octopus, penguin, sailor, lighthouse, shoal, colony, captain, mermaid. Utilise UNIQUEMENT ces types.
+1. Certaines cartes peuvent être partiellement cachées (par d'autres cartes, par le bord de la photo, ou superposées). Identifie-les quand même si tu vois au moins le pictogramme OU le nombre.
+2. Parcours la photo de gauche à droite, ligne par ligne, de haut en bas.
+3. Pour CHAQUE carte visible, lis les 3 signaux dans cet ordre:
    a. Le nombre en bas à droite (x9, x8, x7...) → restreint les types possibles
    b. Le pictogramme en haut à gauche → confirme le type exact
    c. Le symbole ColorADD en bas à droite → donne la couleur
-3. Pour les nombres ambigus: x5 = swimmer, shark ou octopus; x1 = lighthouse, shoal, colony ou captain. Utilise le pictogramme pour trancher.
-4. Pour les Duo (crab, boat, fish, swimmer, shark): le pictogramme montre l'icône en trait plein + la carte paire en pointillés.
-5. Les cartes peuvent être chevauchées ou partiellement visibles. Identifie-les si tu vois assez d'éléments (picto + nombre).
+4. Pour les nombres ambigus: x5 = swimmer, shark ou octopus; x1 = lighthouse, shoal, colony ou captain. Utilise le pictogramme pour trancher.
+5. Pour les Duo (crab, boat, fish, swimmer, shark): le pictogramme montre l'icône en trait plein + la carte paire en pointillés.
 6. Les sirènes (mermaid) sont TOUJOURS de couleur blanche.
-7. Avant de répondre, RECOMPTE les cartes identifiées et vérifie que le compte total correspond à ce que tu vois sur la photo.
+7. Avant de répondre, RECOMPTE les cartes identifiées une par une et vérifie que le compte total correspond exactement au nombre d'entrées dans "cards".
 
 FORMAT DE RÉPONSE (JSON strict, sans markdown, sans commentaire):
 {

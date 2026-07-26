@@ -1,29 +1,25 @@
 {
-  "count": 14,
+  "count": 10,
   "cards": [
     {
-      "type": "colony",
+      "type": "swimmer",
+      "color": "blue"
+    },
+    {
+      "type": "swimmer",
+      "color": "blue"
+    },
+    {
+      "type": "penguin",
       "color": "green"
     },
     {
-      "type": "swimmer",
-      "color": "lightblue"
-    },
-    {
-      "type": "swimmer",
-      "color": "black"
+      "type": "penguin",
+      "color": "purple"
     },
     {
       "type": "boat",
       "color": "darkblue"
-    },
-    {
-      "type": "boat",
-      "color": "black"
-    },
-    {
-      "type": "penguin",
-      "color": "violet"
     },
     {
       "type": "sailor",
@@ -31,31 +27,19 @@
     },
     {
       "type": "crab",
-      "color": "green"
-    },
-    {
-      "type": "crab",
-      "color": "black"
+      "color": "red"
     },
     {
       "type": "fish",
       "color": "yellow"
     },
     {
-      "type": "fish",
-      "color": "green"
-    },
-    {
-      "type": "shell",
+      "type": "octopus",
       "color": "yellow"
     },
     {
       "type": "shell",
-      "color": "black"
-    },
-    {
-      "type": "shell",
-      "color": "white"
+      "color": "brown"
     }
   ]
 }
