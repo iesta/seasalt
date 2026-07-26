@@ -12,7 +12,8 @@
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "test:process": "tsx test/process-images.ts"
+    "test:process": "tsx test/process-images.ts",
+    "test:hybrid": "tsx test/process-hybrid.ts"
   },
   "dependencies": {
     "react": "^18.3.1",
