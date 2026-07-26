@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "type": "module",
   "description": "Compteur de points pour le jeu Sea Salt & Paper — photographiez votre main, obtenez votre score.",
+  "packageManager": "pnpm@11.9.0",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
