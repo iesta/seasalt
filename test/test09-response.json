@@ -1,0 +1,45 @@
+{
+  "count": 10,
+  "cards": [
+    {
+      "type": "penguin",
+      "color": "pink"
+    },
+    {
+      "type": "penguin",
+      "color": "violet"
+    },
+    {
+      "type": "boat",
+      "color": "lightblue"
+    },
+    {
+      "type": "boat",
+      "color": "yellow"
+    },
+    {
+      "type": "shell",
+      "color": "black"
+    },
+    {
+      "type": "swimmer",
+      "color": "lightblue"
+    },
+    {
+      "type": "swimmer",
+      "color": "darkblue"
+    },
+    {
+      "type": "fish",
+      "color": "black"
+    },
+    {
+      "type": "fish",
+      "color": "black"
+    },
+    {
+      "type": "mermaid",
+      "color": "white"
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "count": 14,
+  "cards": [
+    {
+      "type": "shoal",
+      "color": "black"
+    },
+    {
+      "type": "colony",
+      "color": "green"
+    },
+    {
+      "type": "swimmer",
+      "color": "lightblue"
+    },
+    {
+      "type": "swimmer",
+      "color": "blue"
+    },
+    {
+      "type": "swimmer",
+      "color": "black"
+    },
+    {
+      "type": "penguin",
+      "color": "pink"
+    },
+    {
+      "type": "penguin",
+      "color": "violet"
+    },
+    {
+      "type": "sailor",
+      "color": "pink"
+    },
+    {
+      "type": "crab",
+      "color": "green"
+    },
+    {
+      "type": "crab",
+      "color": "black"
+    },
+    {
+      "type": "fish",
+      "color": "yellow"
+    },
+    {
+      "type": "fish",
+      "color": "green"
+    },
+    {
+      "type": "shell",
+      "color": "yellow"
+    },
+    {
+      "type": "shell",
+      "color": "black"
+    }
+  ]
+}

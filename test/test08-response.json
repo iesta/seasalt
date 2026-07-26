@@ -1,0 +1,25 @@
+{
+  "count": 5,
+  "cards": [
+    {
+      "type": "penguin",
+      "color": "pink"
+    },
+    {
+      "type": "penguin",
+      "color": "violet"
+    },
+    {
+      "type": "boat",
+      "color": "lightblue"
+    },
+    {
+      "type": "boat",
+      "color": "yellow"
+    },
+    {
+      "type": "shell",
+      "color": "black"
+    }
+  ]
+}

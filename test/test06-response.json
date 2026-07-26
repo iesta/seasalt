@@ -1,0 +1,17 @@
+{
+  "count": 3,
+  "cards": [
+    {
+      "type": "colony",
+      "color": "green"
+    },
+    {
+      "type": "penguin",
+      "color": "violet"
+    },
+    {
+      "type": "swimmer",
+      "color": "pink"
+    }
+  ]
+}

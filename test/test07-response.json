@@ -1,0 +1,13 @@
+{
+  "count": 2,
+  "cards": [
+    {
+      "type": "swimmer",
+      "color": "pink"
+    },
+    {
+      "type": "swimmer",
+      "color": "violet"
+    }
+  ]
+}
