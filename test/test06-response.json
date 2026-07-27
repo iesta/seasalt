@@ -7,11 +7,11 @@
     },
     {
       "type": "penguin",
-      "color": "violet"
+      "color": "pink"
     },
     {
-      "type": "swimmer",
-      "color": "pink"
+      "type": "penguin",
+      "color": "purple"
     }
   ]
 }

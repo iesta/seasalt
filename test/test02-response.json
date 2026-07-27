@@ -1,5 +1,5 @@
 {
-  "count": 14,
+  "count": 16,
   "cards": [
     {
       "type": "colony",
@@ -14,7 +14,7 @@
       "color": "darkblue"
     },
     {
-      "type": "shark",
+      "type": "swimmer",
       "color": "black"
     },
     {
@@ -23,7 +23,7 @@
     },
     {
       "type": "boat",
-      "color": "black"
+      "color": "blue"
     },
     {
       "type": "penguin",

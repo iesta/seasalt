@@ -1,9 +1,9 @@
 {
-  "count": 15,
+  "count": 16,
   "cards": [
     {
       "type": "crab",
-      "color": "black"
+      "color": "darkblue"
     },
     {
       "type": "octopus",
@@ -11,7 +11,7 @@
     },
     {
       "type": "shoal",
-      "color": "white"
+      "color": "black"
     },
     {
       "type": "colony",
@@ -19,19 +19,27 @@
     },
     {
       "type": "shark",
+      "color": "darkblue"
+    },
+    {
+      "type": "shark",
       "color": "lightblue"
     },
     {
-      "type": "swimmer",
+      "type": "octopus",
       "color": "black"
     },
     {
       "type": "penguin",
-      "color": "rose"
+      "color": "pink"
     },
     {
       "type": "penguin",
-      "color": "violet"
+      "color": "purple"
+    },
+    {
+      "type": "fish",
+      "color": "black"
     },
     {
       "type": "fish",
@@ -39,7 +47,7 @@
     },
     {
       "type": "boat",
-      "color": "white"
+      "color": "black"
     },
     {
       "type": "mermaid",
@@ -52,14 +60,6 @@
     {
       "type": "shell",
       "color": "black"
-    },
-    {
-      "type": "fish",
-      "color": "blue"
-    },
-    {
-      "type": "shark",
-      "color": "blue"
     }
   ]
 }

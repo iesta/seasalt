@@ -1,25 +1,25 @@
 {
-  "count": 14,
+  "count": 18,
   "cards": [
+    {
+      "type": "shoal",
+      "color": "darkblue"
+    },
+    {
+      "type": "colony",
+      "color": "green"
+    },
+    {
+      "type": "swimmer",
+      "color": "lightblueness"
+    },
     {
       "type": "swimmer",
       "color": "lightblue"
     },
     {
-      "type": "swimmer",
-      "color": "darkblue"
-    },
-    {
-      "type": "swimmer",
+      "type": "octopus",
       "color": "black"
-    },
-    {
-      "type": "shoal",
-      "color": "black"
-    },
-    {
-      "type": "colony",
-      "color": "green"
     },
     {
       "type": "penguin",

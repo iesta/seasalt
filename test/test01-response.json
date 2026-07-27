@@ -1,21 +1,17 @@
 {
-  "count": 11,
+  "count": 10,
   "cards": [
+    {
+      "type": "lighthouse",
+      "color": "rose"
+    },
+    {
+      "type": "shoal",
+      "color": "darkblue"
+    },
     {
       "type": "mermaid",
       "color": "white"
-    },
-    {
-      "type": "lighthouse",
-      "color": "yellow"
-    },
-    {
-      "type": "shark",
-      "color": "black"
-    },
-    {
-      "type": "fish",
-      "color": "darkblue"
     },
     {
       "type": "octopus",

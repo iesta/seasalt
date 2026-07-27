@@ -2,12 +2,12 @@
   "count": 2,
   "cards": [
     {
-      "type": "swimmer",
+      "type": "penguin",
       "color": "pink"
     },
     {
-      "type": "swimmer",
-      "color": "violet"
+      "type": "penguin",
+      "color": "purple"
     }
   ]
 }
