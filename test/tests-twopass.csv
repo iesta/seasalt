@@ -1,0 +1,10 @@
+image,pass1_count,card_count,score,dominant_color_name,dominant_color_count
+test01.jpg,10,10,11,Bleu foncé,2
+test02.jpg,13,14,8,Vert,3
+test03.jpg,16,14,13,Vert,3
+test04.jpg,18,15,14,Noir,4
+test05.jpg,17,15,19,Noir,6
+test06.jpg,3,3,7,Vert,1
+test07.jpg,2,2,3,Rose,1
+test08.jpg,5,5,4,Rose,1
+test09.jpg,11,10,8,Noir,3

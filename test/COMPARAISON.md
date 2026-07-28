@@ -7,12 +7,14 @@
 | **test01** | **Gemini 3.6 Flash** | **11** | **11** | Jaune (2) | ~26s |
 | | Gemini 3.5 Flash Lite v1 | 10 | 11 | Blanc (2) | ~5s |
 | | Gemini 3.5 Flash Lite v2 | 10 | 11 | Jaune (2) | ~6s |
+| | Gemini 3.5 Flash Lite 2-pass | 10 | 11 | Bleu foncé (2) | ~13s |
 | | Gemini 2.5 Flash | 12 | 13 | Bleu foncé (3) | ~6s |
 | | GPT-4o-mini | 8 | 6 | Blanc (2) | ~7s |
 | | GLM-4.6v | 10 | — | — | ~8s |
 | **test02** | **Gemini 3.6 Flash** | 14 | 8 | Noir (4) | ~18s |
 | | Gemini 3.5 Flash Lite v1 | 14 | 9 | Bleu foncé (3) | ~10s |
 | | Gemini 3.5 Flash Lite v2 | **16** | 13 | Bleu foncé (4) | ~11s |
+| | Gemini 3.5 Flash Lite 2-pass | 14 | 8 | Vert (3) | ~19s |
 | | Gemini 2.5 Flash | 14 | 10 | Noir (4) | ~9s |
 | | GPT-4o-mini | 10 | 3 | — (2) | ~8s |
 | | GLM-4.6v | 10 | — | — | ~8s |
@@ -59,6 +61,18 @@
 - test09: **11** (+1) → amélioration
 
 Le prompt v2 a amélioré test03 et test09, mais pas test01. Le bord blanc aide mais ne résout pas le sous-comptage des cartes partiellement cachées. Pour test01, il manque probablement 1 carte qui est très chevauchée.
+
+## Résultat two-pass
+
+L'approche deux passes (compter puis classifier) n'a pas amélioré les résultats par rapport au single-pass v2. Le comptage (pass 1) est lui-même imprécis (le modèle ne peut pas compter les bords blancs de manière fiable). Le gain de temps est négligeable (2× le coût API pour le même résultat).
+
+| Test | Pass 1 (comptage) | Détecté final | Δ |
+|---|---|---|---|
+| test01 | 10 | 10 | 0 |
+| test02 | 13 | 14 | +1 |
+| test03 | 16 | 14 | -2 |
+| test05 | 17 | 15 | -2 |
+| test09 | 11 | 10 | -1 |
 
 ## Recommandation
 
