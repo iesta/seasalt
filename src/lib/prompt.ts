@@ -14,39 +14,22 @@ const TYPE_BY_COUNT: Record<string, CardType[]> = {
 }
 
 const TYPE_PICTOGRAMS: Record<CardType, string> = {
-  crab: 'crabe stylisé, vu de dessus, avec pinces de chaque côté du corps',
-  boat: 'bateau/coque vu de profil, mât et voile',
-  fish: 'UN SEUL poisson, profil, nageoire dorsale',
-  swimmer: 'figure humaine en mouvement de nage, bras devant',
-  shark: 'requin, nageoire dorsale triangulaire pointue, bouche',
-  shell: 'coquille (palourde), forme arrondie, stries concentriques',
-  octopus: 'pieuvre, tête ronde, tentacules ondulés',
-  penguin: 'UN SEUL pingouin, debout, ventre blanc',
-  sailor: 'tête de marin, casquette plate sur la tête',
-  lighthouse: 'tour de phare, faisceau lumineux latéral',
-  shoal: 'PLUSIEURS petits poissons groupés formant un banc',
-  colony: 'PLUSIEURS pingouins groupés, debout côte à côte',
-  captain: 'tête de capitaine, barbe fournie, casquette avec insigne',
-  mermaid: 'sirène, buste humain, queue de poisson',
+  crab: 'crabe, pinces latérales',
+  boat: 'bateau vu de profil',
+  fish: 'UN SEUL poisson (≠ shoal = plusieurs)',
+  swimmer: 'humain en position nage, bras tendus',
+  shark: 'requin, nageoire dorsale pointue, dents visibles',
+  shell: 'coquille arrondie (palourde)',
+  octopus: 'pieuvre, tête ronde + tentacules',
+  penguin: 'UN SEUL pingouin debout, ventre blanc (≠ colony = plusieurs)',
+  sailor: 'tête de marin, casquette plate, SANS barbe (≠ captain)',
+  lighthouse: 'TOUR de phare avec faisceau lumineux',
+  shoal: 'PLUSIEURS petits poissons groupés en banc (≠ fish = 1 seul)',
+  colony: 'PLUSIEURS pingouins groupés côte à côte (≠ penguin = 1 seul)',
+  captain: 'tête avec casquette + BARBE (≠ sailor = sans barbe)',
+  mermaid: 'sirène, buste humain + queue de poisson',
   unknown: 'non identifiable'
 }
-
-const COLORADD_SYMBOLS = `▲ triangle vers le haut = BLEU
-▼ triangle vers le bas = ROUGE
-/ ligne diagonale = JAUNE
-■ carré plein = NOIR
-□ carré vide = BLANC
-
-Couleurs dérivées (superposition des symboles de base):
-  vert = ▲/ (bleu + jaune)
-  violet = ▲▼ (bleu + rouge)
-  rose = □▼ (blanc + rouge = rouge clair)
-  bleu clair = □▲ (blanc + bleu)
-  bleu foncé = ■▲ (noir + bleu)
-  gris = ■□ (noir + blanc)
-  jaune = / (diagonale seule)
-  noir = ■ (carré plein seul)
-  blanc = □ (carré vide seul)`
 
 export function buildSystemPrompt(): string {
   const countLines = Object.entries(TYPE_BY_COUNT)
@@ -61,8 +44,14 @@ export function buildSystemPrompt(): string {
     .map(([t, desc]) => `- ${t}: ${desc}`)
     .join('\n')
 
-  return `Tu es un assistant expert dans le jeu de cartes Sea Salt & Paper (Bombyx, 2022).
-Ton rôle: identifier TOUTES les cartes visibles sur une photo et les retourner en JSON.
+  return `Tu es un assistant expert du jeu Sea Salt & Paper (Bombyx, 2022).
+Identifie TOUTES les cartes visibles et retourne-les en JSON.
+
+APPARENCE DES CARTES:
+- Chaque carte est un rectangle avec un BORD BLANC distinctif autour.
+- Toutes les cartes ont la MÊME TAILLE.
+- Les cartes sont posées sur une table, parfois chevauchées ou superposées en paires.
+- Quand deux cartes se chevauchent, tu vois DEUX bords blancs proches — compte chacune.
 
 STRUCTURE D'UNE CARTE:
 ┌──────────────────────────────┐
@@ -72,38 +61,35 @@ STRUCTURE D'UNE CARTE:
 │                              │
 │                    [xN]  ◆▲ │
 └──────────────────────────────┘
-- HAUT GAUCHE: pictogramme identifiant le type de carte
-- BAS DROITE: nombre d'exemplaires dans le deck (x9, x8...) + symbole ColorADD
+- HAUT GAUCHE: pictogramme identifiant le type
+- BAS DROITE: nombre d'exemplaires (x9, x8...) + symbole de couleur
 
 IDENTIFICATION PAR NOMBRE (bas droite):
 ${countLines}
 
-IDENTIFICATION PAR PICTOGRAMME (haut gauche):
+PICTOGRAMMES (haut gauche — confirmation du type):
 ${pictoLines}
 
-SYSTÈME ColorADD (bas droite — identifie la couleur):
-${COLORADD_SYMBOLS}
+COULEURS (symbole en bas droite):
+jaune, vert, rose, violet, bleu clair, bleu foncé, noir, gris, blanc
+La sirène (mermaid) est TOUJOURS de couleur blanche.
 
-INSTRUCTIONS:
-0. LISTE DES TYPES DE CARTES POSSIBLES: crab, boat, fish, swimmer, shark, shell, octopus, penguin, sailor, lighthouse, shoal, colony, captain, mermaid. Utilise UNIQUEMENT ces types.
-1. Certaines cartes peuvent être partiellement cachées (par d'autres cartes, par le bord de la photo, ou superposées). Identifie-les quand même si tu vois au moins le pictogramme OU le nombre.
-2. Parcours la photo de gauche à droite, ligne par ligne, de haut en bas.
-3. Pour CHAQUE carte visible, lis les 3 signaux dans cet ordre:
-   a. Le nombre en bas à droite (x9, x8, x7...) → restreint les types possibles
-   b. Le pictogramme en haut à gauche → confirme le type exact
-   c. Le symbole ColorADD en bas à droite → donne la couleur
-4. Pour les nombres ambigus: x5 = swimmer, shark ou octopus; x1 = lighthouse, shoal, colony ou captain. Utilise le pictogramme pour trancher.
-5. Pour les Duo (crab, boat, fish, swimmer, shark): le pictogramme montre l'icône en trait plein + la carte paire en pointillés.
-6. Les sirènes (mermaid) sont TOUJOURS de couleur blanche.
-7. Avant de répondre, RECOMPTE les cartes identifiées une par une et vérifie que le compte total correspond exactement au nombre d'entrées dans "cards".
+MÉTHODE:
+1. Liste des types possibles: crab, boat, fish, swimmer, shark, shell, octopus, penguin, sailor, lighthouse, shoal, colony, captain, mermaid. Utilise UNIQUEMENT ces types.
+2. Cherche les BORDS BLANCS rectangulaires sur la photo. Chaque bord blanc = une carte.
+3. Parcours la photo de gauche à droite, ligne par ligne, de haut en bas.
+4. Pour CHAQUE carte, lis: nombre (bas droite) → pictogramme (haut gauche) → symbole couleur (bas droite).
+5. Cartes x5 ambiguës: swimmer = silhouette humaine, shark = requin, octopus = pieuvre avec tentacules.
+6. Cartes x1 ambiguës: lighthouse = tour, shoal = groupe de poissons, colony = groupe de pingouins, captain = homme barbu.
+7. Cartes chevauchées: si tu vois 2 bords blancs contigus, ce sont 2 cartes distinctes.
+8. Avant de répondre, RECOMPTE les entrées dans "cards" et vérifie que "count" correspond exactement.
 
-FORMAT DE RÉPONSE (JSON strict, sans markdown, sans commentaire):
+FORMAT (JSON strict, sans markdown ni commentaire):
 {
   "count": 7,
   "cards": [
     { "type": "crab", "color": "yellow" },
     { "type": "boat", "color": "darkblue" }
   ]
-}
-Le champ "count" doit être STRICTEMENT égal au nombre d'entrées dans "cards".`
+}`
 }
