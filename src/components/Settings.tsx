@@ -7,7 +7,7 @@ const MODEL_STORAGE = 'seasalt.model'
 export function loadSettings(): { apiKey: string; model: string } {
   return {
     apiKey: localStorage.getItem(KEY_STORAGE) ?? '',
-    model: localStorage.getItem(MODEL_STORAGE) ?? ''
+    model: localStorage.getItem(MODEL_STORAGE) ?? 'google/gemini-3.6-flash'
   }
 }
 
